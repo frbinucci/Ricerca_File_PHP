@@ -8,9 +8,9 @@ Se l'utente selezionerà l'opzione "Tutti i files", l'applicazione provederà a 
 
 ## Tecnologie utilizzate
 
-*PHP
-*HTML
-*Javascript (JQuery)
+* PHP
+* HTML
+* Javascript (JQuery)
 
 
 
