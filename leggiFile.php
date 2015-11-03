@@ -2,7 +2,7 @@
 <html>
 	<head>
     	<title>Prova</title>
-        <!--<link rel="stylesheet" type="text/css" href="stiliCss.css">-->
+        <link rel="stylesheet" type="text/css" href="stiliCss.css">
 		 <!-- Latest compiled and minified CSS -->
 		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 		<!-- jQuery library -->
@@ -23,7 +23,7 @@
 							//Chiamata Ajax di tipo "POST".
 							$.ajax({     
 								type: "POST",   
-								url: "http://localhost/cercaFile.php",  
+								url: "http://francescobinucci.altervista.org/EsercizioPHP/cercaFile.php",  
 								data: dati, 
 								success: function(response){ 
 									//Append dei dati restituiti sull'apposita area di testo.
@@ -40,7 +40,7 @@
 		</div>
 		<div class="col-md-4">
     <h1>ELENCO ESTENSIONI</h1>
-    <form action="cercaFile.php" method="post" class="form-group">
+    <form id="interfaccia" method="post" class="form-group">
     	<select class="form-control" name ="select[]" id="estensioni">
 		<option value="Tutti">Tutti i file</option>
 					<?php
@@ -67,7 +67,7 @@
 						  /*La funzione "opendir()" restituisce "true" se nel percorso indicato è presente una directory, false
 						  se nel percorso indicato NON è presente una directory.*/
 						  
-						  $cartella = 'grafici';
+						  $cartella = 'ElencoFile';
 							
 						  if($handle = opendir($cartella))
 						  {
@@ -134,7 +134,6 @@
 					</textarea>
 				</form>
 			</div>
-		</form>
 	</body>
 </html>
 
