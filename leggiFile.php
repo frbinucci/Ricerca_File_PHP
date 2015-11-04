@@ -2,7 +2,7 @@
 <html>
 	<head>
     	<title>Prova</title>
-        <!--<link rel="stylesheet" type="text/css" href="stiliCss.css">-->
+        <link rel="stylesheet" type="text/css" href="stiliCss.css">
 		 <!-- Latest compiled and minified CSS -->
 		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 		<!-- jQuery library -->
@@ -20,7 +20,7 @@
     	<select class="form-control" name ="select[]" id="estensioni" onchange=submit();>
 		<option value="Tutti">Tutti i file</option>
 					<?php
-						$DIRECTORY_RICERCA='grafici';
+						$DIRECTORY_RICERCA='ElencoFile';
 
 						  function estraiEstensione($filename) 
 						  {
@@ -85,6 +85,7 @@
 							}
 							$opzione;
 							 //Il ciclo seguente serve a generare le opzioni contenute all'interno della select.
+                             echo("\n");
 							 foreach($arrayEstensioni as $extension)
 							 {
 								 $opzione="<option";
@@ -97,9 +98,11 @@
 								 }
 								 $opzione=$opzione." "."value=\"$extension\">$extension</option>"."\n";
 								 echo ($opzione);
+                                 
 								 
 								 
 							 }
+                             echo ("</select>");
 						  }
 						  else
 						  {
@@ -155,10 +158,9 @@
 						
 						
 					?>
-					</select>
-				</form>
-			</div>
-		</form>
+              
+		    </form>
+        </div>
 	</body>
 </html>
 
