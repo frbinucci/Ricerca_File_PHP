@@ -2,72 +2,43 @@
 <html>
 	<head>
     	<title>Prova</title>
-        <link rel="stylesheet" type="text/css" href="stiliCss.css">
+        <!--<link rel="stylesheet" type="text/css" href="stiliCss.css">-->
 		 <!-- Latest compiled and minified CSS -->
 		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 		<!-- jQuery library -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 		<!-- Latest compiled JavaScript -->
 		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-		<script type="text/javascript"> 
-		/*Funzione della libreria JQuery necessaria all'esecuzione di AJAX*/
-			//La funzione viene eseguita quando l'intero documento viene caricato.
-			$(document).ready(function()
-			{
-				//Definizione della variabile "dati", contenente i risultati dell'elaborazione della pagina php.
-				var dati; 
-						//La funzione viene eseguita quando si verifica l'evento "change".
-						$("#estensioni").change(function(){ 
-							//Prelevamento dei dati dal form.
-							dati = $("#estensioni").serialize();
-							//Chiamata Ajax di tipo "POST".
-							$.ajax({     
-								type: "POST",   
-								url: "http://francescobinucci.altervista.org/EsercizioPHP/cercaFile.php",  
-								data: dati, 
-								success: function(response){ 
-									//Append dei dati restituiti sull'apposita area di testo.
-									$("#risultato").html(response); 
-								} 
-							});  
-						});  
-			});
-		</script>
 		
     </head>
     <body>
 		<div class="col-md-4">
 		</div>
 		<div class="col-md-4">
-    <h1>ELENCO ESTENSIONI</h1>
-    <form id="interfaccia" method="post" class="form-group">
-    	<select class="form-control" name ="select[]" id="estensioni">
+    <h3>ELENCO ESTENSIONI</h3>
+    <form method="post" class="form-group" action=leggiFile.php>
+    	<select class="form-control" name ="select[]" id="estensioni" onchange=submit();>
 		<option value="Tutti">Tutti i file</option>
 					<?php
+						$DIRECTORY_RICERCA='grafici';
 
 						  function estraiEstensione($filename) 
 						  {
+							//Ottengo l'estensione del file.
 							$ext = explode(".", $filename);
+							/*Restituisco l'elemento dell'array contenente l'estensione (ultimo elemento con indice pari alla dimensione
+							dell'array diminuita di 1).*/
 							return $ext[count($ext)-1];  
 						  }
-						  /*
-						  $est = 'jpg';
-						  $prova = glob('ElencoFile/*'.'.'.$est);
-						  for($i=0;$i<count($prova);$i++)
-						  {
-							echo basename($prova[$i]."\n");
-						  }
-						  */
+						  
 						  //Funzione "generaSelect()" che genera la select in maniera dinamica.
-						  function generaSelect()
+						  function generaSelect($cartella)
 						  {
 						  //L'elenco dei file viene memorizzato in un array.
 						  $elencoFile = array(); //Dichiarazione dell'array.
 						  //Verifica se al percorso indicato è presente una cartella.
 						  /*La funzione "opendir()" restituisce "true" se nel percorso indicato è presente una directory, false
 						  se nel percorso indicato NON è presente una directory.*/
-						  
-						  $cartella = 'ElencoFile';
 							
 						  if($handle = opendir($cartella))
 						  {
@@ -112,28 +83,82 @@
 									$j++;
 								}
 							}
-
+							$opzione;
 							 //Il ciclo seguente serve a generare le opzioni contenute all'interno della select.
-							 for($i=0;$i<count($arrayEstensioni);$i++)
-							  {
-								  echo ("<option value=\"$arrayEstensioni[$i]\">$arrayEstensioni[$i]</option>"."\n");
-							  
-							  }
+							 foreach($arrayEstensioni as $extension)
+							 {
+								 $opzione="<option";
+								 if(isset($_POST['select']))
+								 {
+									 if(strcmp($extension,implode($_POST['select']))==0)
+									 {
+										 $opzione=$opzione." "."selected";
+									 }
+								 }
+								 $opzione=$opzione." "."value=\"$extension\">$extension</option>"."\n";
+								 echo ($opzione);
+								 
+								 
+							 }
 						  }
 						  else
 						  {
 						  //Se l'elemento indicato nel percorso non è una cartella viene generato un messaggio di errore.
 						  echo ("<h1>ERRORE! Cartella non trovata</h1>");
 						  }
+						  $htmlCode="<textarea class=\"form-control\" id=\"risultato\" col=\"30\" rows=\"10\">";
+						  echo($htmlCode);
+						  if(isset($_POST['select']))
+						  {
+							cercaFile($cartella);
+						  }
+						  $htmlCode='</textarea>';
+						  echo($htmlCode);
+						  
+						}
+						
+						function cercaFile($cartella)
+						{
+							$estensione = implode($_POST['select']);
+							//Array contenente l'elenco dei file.
+							$elencoFile = array();
+							if(strcmp($estensione,"Tutti")!=0)
+							{
+								//Se l'utente ha scelto di visualizzare i file di una specifica estensione essi vengono salvati nell'array mediante la funzione "glob()".
+								$elencoFile = glob($cartella.'/'.'*'.'.'.$estensione);
+								//Stampa dell'elenco dei file dell'estensione indicata.
+								foreach($elencoFile as $file)
+								{
+									echo basename($file)."\n";
+								}
+							}
+							/*Nel caso in cui l'utente abbia scelto di visualizzare l'elenco completo dei file presenti alla posizione indicata, lo script restituirà
+							il nome di tali files.*/
+							else
+							{
+									if($handle = opendir($cartella))
+									{	 
+										while (($file = readdir($handle))!==false)
+										{
+											if ($file != "." && $file != "..")
+											{
+												echo $file."\n";
+											} 
+										}
+										closedir($handle);
+								}
+							}
 						}
 						//Invocazione della funzione "generaSelect()".
-						generaSelect(); 
+						
+						generaSelect($DIRECTORY_RICERCA);
+						
+						
 					?>
 					</select>
-					<textarea class="form-control" id="risultato" col="30" rows="10">
-					</textarea>
 				</form>
 			</div>
+		</form>
 	</body>
 </html>
 
